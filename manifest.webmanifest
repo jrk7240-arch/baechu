@@ -1,0 +1,31 @@
+{
+  "name": "청원 배추 사업 길잡이",
+  "short_name": "배추 길잡이",
+  "description": "시세 전망, 산지 출하 달력, 자본금과 좋은 밭, 돈 셈",
+  "lang": "ko",
+  "start_url": "/baechu/",
+  "scope": "/baechu/",
+  "display": "standalone",
+  "background_color": "#f3f5ee",
+  "theme_color": "#2c7a4b",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
