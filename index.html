@@ -6,12 +6,20 @@
 <title>청원 배추 사업 길잡이</title>
 <meta property="og:title" content="청원 배추 사업 길잡이">
 <meta property="og:description" content="시세 전망, 산지 출하 달력, 자본금과 좋은 밭, 돈 셈">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2c7a4b">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="배추 길잡이">
 <style>body{margin:0;font-family:"Malgun Gothic",sans-serif;background:#f3f5ee;color:#1b2a1f}#w{max-width:600px;margin:0 auto;padding:60px 20px;font-size:20px;line-height:1.7;text-align:center}a{color:#2c7a4b}</style>
 </head>
 <body>
 <div id="w"><p id="m">보고서를 불러오는 중입니다. 잠시만 기다려 주세요.</p></div>
 <script>
 (function(){
+  if("serviceWorker" in navigator){try{navigator.serviceWorker.register("sw.js").catch(function(){});}catch(e){}}
   var API="https://script.google.com/macros/s/AKfycbzJoi4J7mFhEuoj5sa1IfzmVvuj4QdmGNkYsXjDmK2xBDVjQvS7R5GOX1uY2WvdnOEI/exec";
   var m=document.getElementById("m");
   function fail(){m.innerHTML='보고서를 불러오지 못했습니다. <a href="'+API+'">여기를 눌러 열어 보세요.</a>';}
