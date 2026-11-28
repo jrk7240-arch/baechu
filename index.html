@@ -21,12 +21,44 @@
 (function(){
   if("serviceWorker" in navigator){try{navigator.serviceWorker.register("sw.js").catch(function(){});}catch(e){}}
   var API="https://script.google.com/macros/s/AKfycbzJoi4J7mFhEuoj5sa1IfzmVvuj4QdmGNkYsXjDmK2xBDVjQvS7R5GOX1uY2WvdnOEI/exec";
+  var KH="baechu-last-html",KT="baechu-last-time";
   var m=document.getElementById("m");
-  function fail(){m.innerHTML='보고서를 불러오지 못했습니다. <a href="'+API+'">여기를 눌러 열어 보세요.</a>';}
+  var cached=null,ctime=0,shown=false;
+  try{cached=localStorage.getItem(KH);ctime=parseInt(localStorage.getItem(KT)||"0",10)||0;}catch(e){}
+  function when(t){var d=new Date(t);var h=d.getHours();return (d.getMonth()+1)+"월 "+d.getDate()+"일 "+(h<12?"오전 ":"오후 ")+((h%12)||12)+"시 "+d.getMinutes()+"분";}
+  function bar(text,btn){
+    try{
+      var b=document.getElementById("cachebar");
+      if(!b){b=document.createElement("div");b.id="cachebar";b.setAttribute("role","status");
+        b.style.cssText="position:sticky;top:0;z-index:50;background:#fbefd8;color:#5a3a00;border-bottom:2px solid #9a5b00;padding:10px 14px;font-size:16px;line-height:1.5;font-family:sans-serif;display:flex;flex-wrap:wrap;gap:8px;align-items:center";
+        document.body.insertBefore(b,document.body.firstChild);}
+      b.innerHTML="";var s=document.createElement("span");s.textContent=text;b.appendChild(s);
+      if(btn){var k=document.createElement("button");k.type="button";k.textContent="새 내용 보기";
+        k.style.cssText="font:inherit;font-weight:700;min-height:44px;padding:6px 16px;border:0;border-radius:10px;background:#2c7a4b;color:#fff";
+        k.addEventListener("click",function(){location.reload();});b.appendChild(k);}
+      return b;
+    }catch(e){return null;}
+  }
+  function write(html){document.open();document.write(html);document.close();}
+  function save(html){try{localStorage.setItem(KH,html);localStorage.setItem(KT,String(Date.now()));}catch(e){}}
+  if(cached){
+    shown=true;write(cached);
+    setTimeout(function(){bar(when(ctime)+"에 받은 내용입니다. 새 내용을 확인하는 중입니다.");},0);
+  }
+  function fail(){
+    if(shown){bar("인터넷이 약해 "+when(ctime)+"에 받은 내용을 보여 드립니다.");return;}
+    m.innerHTML='보고서를 불러오지 못했습니다. <a href="'+API+'">여기를 눌러 열어 보세요.</a>';
+  }
   function load(left){
     fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({fn:"getApp",a:[]})})
     .then(function(r){return r.json();})
-    .then(function(o){if(!o||!o.r)throw new Error("empty");document.open();document.write(o.r);document.close();})
+    .then(function(o){
+      if(!o||!o.r)throw new Error("empty");
+      if(!shown){save(o.r);shown=true;write(o.r);return;}
+      if(o.r===cached){save(o.r);var b=bar("가장 새 내용입니다.");if(b){setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);},2500);}return;}
+      save(o.r);
+      if((window.scrollY||0)<80){write(o.r);}else{bar("새 내용이 왔습니다.",true);}
+    })
     .catch(function(){if(left>0){setTimeout(function(){load(left-1);},1500);}else{fail();}});
   }
   load(2);
